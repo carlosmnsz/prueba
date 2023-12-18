@@ -1,0 +1,35 @@
+programa MiPrograma;
+
+inicio_var
+    entero miVariable;
+    logico esVerdadero;
+    lista miLista;
+fin_var
+
+procedimiento sumarEnteros(entero a, entero b) 
+{
+    retorno a + b;
+}
+
+inicio
+    miVariable = 5;
+    esVerdadero = verdadero;
+
+    si miVariable == 5 entonces
+        salida("Mi variable es 5.");
+    sino
+        salida("Mi variable no es 5.");
+    fin_si
+
+    miLista = ANIADIR_ELEMENTO(5.5, 2);
+    salida(ELEMENTO_ACTUAL(miLista));
+
+    mientras miVariable > 0 hacer
+        salida("Contando hacia abajo: ", miVariable);
+        miVariable = miVariable - 1;
+    fin_mientras
+
+    para miVariable = 0 hasta_aumento 5 hacer_for
+        salida("Contando hacia arriba: ", miVariable);
+    fin_for
+fin
