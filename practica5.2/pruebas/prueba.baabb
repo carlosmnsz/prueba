@@ -1,0 +1,10 @@
+programa{
+    var
+        entero a, b, c;
+        lista lista logico d, a, f;
+        lista real f;
+    ;
+
+    a = 0;
+    b = 1;
+}
