@@ -1,0 +1,5 @@
+Para compilar el programa escribid en la terminal: $ make all
+
+Para ejecutar sin pasar documentos: $ ./Analizador
+
+Para ejecutar pasando documentos: $ ./Analizador <nombre_del_documento>
