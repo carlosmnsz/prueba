@@ -1,0 +1,61 @@
+programa{
+    var
+        entero a, b, c;
+        lista logico d, e;
+        lista real f;
+        real g;
+        lista real h;
+        logico i, j, k;
+    ;
+
+    procedimiento A (x, y: entero; z : lista real);
+    inicio
+        {
+            var
+                entero s;
+            ;
+            x = 1;
+            y = 2;
+            z = [1.0, 0.0, 2.0, 5.7];
+        }
+    fin;
+
+    procedimiento B;
+    inicio
+        {
+            var
+                logico hai;
+            ;
+            salida "HOLA", "MUNDO", h;
+            entrada a, b, c;
+        }
+    fin;
+
+    A(a, b, f);
+    B();
+
+    f>>;
+    f<<;
+    $f;
+
+
+    a = (b + c)/(c * #h);
+
+    si (!i && (a>0)) entonces
+        entrada c;
+    sino
+        entrada b;
+    ;
+
+    mientras ((g > -2.1) && (#d==a) && (d@a!=i))
+        {
+        para a:=b+c hasta_aumento a*10 hacer
+        inicio
+            b = -c;
+        fin;
+        f = [3.0, 2.0];
+        }
+    ;
+
+    
+}

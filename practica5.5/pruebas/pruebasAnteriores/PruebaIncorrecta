@@ -1,0 +1,17 @@
+programa MiProgramaErroneo;   
+
+inicio_var
+    entero numero; :
+    logico esValido; @
+fin_var
+
+procedimiento imprimirNumero(entero num)
+{
+    salida("El número es: ", num);
+}
+
+inicio
+    numero = 5;
+    esValido = verdadero;
+    imprimirNumero(numero;
+fin
