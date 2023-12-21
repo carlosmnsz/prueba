@@ -1,0 +1,69 @@
+programa{
+    var
+        entero n, curr, ultim, cuenta, primer;
+    ;
+    curr = 2;
+    ultim = 0;
+    cuenta = 0;
+    primer = 1;
+    salida "Introduce un numero: ";
+    entrada n;
+    salida "n == ", n, "\n";
+    curr = 2;
+
+    mientras (curr <= n)
+        {
+        var
+            entero d;
+        ;
+
+        d = n / curr;
+        salida d, "*", curr, "==", n, "\n";
+        si ((d * curr) == n) entonces
+            {
+            salida curr, "!=", ultim, "\n";
+            si (curr != ultim) entonces
+                {
+                ultim = curr;
+                cuenta = 1;
+                }
+            sino
+                cuenta = cuenta + 1;
+            ;
+            n = n / curr;
+            }
+        sino
+            {
+            salida "SINO\n";
+            si (cuenta > 0) entonces
+                {
+                si (primer == 0) entonces
+                    salida " *";
+                ;
+                primer = 0;
+                salida curr;
+                si (cuenta > 1) entonces
+                    salida "^", cuenta;
+                ;
+                }
+            ;
+            curr = curr + 1;
+            cuenta = 0;
+            }
+        ;
+        }
+    ;
+    si (cuenta > 0) entonces
+        {
+        si (primer == 0) entonces
+            salida " *";
+        ;
+        primer = 0;
+        salida curr;
+        si (cuenta > 1) entonces
+            salida "^", cuenta;
+        ;
+        }
+    ;
+    salida "\n";
+}

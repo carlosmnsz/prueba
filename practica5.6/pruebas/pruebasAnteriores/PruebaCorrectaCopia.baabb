@@ -1,0 +1,23 @@
+programa
+{
+var
+    entero uno dos, tres, cuatro;
+    lista lista entero matriz otramatriz;
+;
+
+procedimiento hola(a, b : entero; c : logico;);
+inicio
+salida "hola";
+fin
+;
+lista
+entrada 9;
+
+variable = ((x - 5) * (y - -5))/(2 * (hola + (-g)) / -49);
+variable = ( - 5) * (y - -5))/(2 * (hola + (-g)) / -49);
+
+mientras (1 > )
+    salida "Contando hacia abajo: " hola;
+    miVariable = miVariable  1;
+;
+}

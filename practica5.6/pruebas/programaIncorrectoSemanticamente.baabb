@@ -1,0 +1,115 @@
+programa
+{
+    var
+        entero a, b, c;
+        real d, e;
+        caracter f;
+        logico g;
+        cadena h;
+
+        lista entero listaEnteros;
+        lista real listaReales;
+        lista caracter listaCaracteres;
+        lista logico listaLogicos;
+        lista cadena listaCadenas;
+    ;
+
+    procedimiento A (x, y : entero; z : lista real);
+    inicio
+        {
+            procedimiento B (a : caracter);
+            inicio
+                {
+                    procedimiento C (w : logico);
+                    inicio
+                        {
+                            si (a > b) entonces
+                                a = a + 1;
+                            sino
+                                b = b + 1;
+                            ;
+                        }
+                    fin;
+                    C(verdadero);
+                }
+            fin;
+
+            B('X');
+        }
+    fin;
+
+    procedimiento D (s : cadena);
+    inicio
+        entrada s;
+        salida s;
+    fin;
+
+    procedimiento E (le1, le2 : lista entero);
+    inicio
+        para i := 0 hasta_aumento 10 hacer
+        inicio
+            le1 = [le1, i];
+        fin;
+    fin;
+
+    procedimiento F;
+    inicio
+    {
+        var
+            entero i;
+            lista real miLista; 
+        ;
+
+        i = 0;
+        miLista = [12.1, 12, -0.1, -1];
+
+        mientras (i < 10 && i >= 0)
+            imprimir("hola");
+            i = 1 + i;
+            si (i == 1 || i == 7) entonces
+                miLista>>;
+                miLista<<;
+                $miLista;
+            sino
+                miLista = #miLista;
+                miLista = ?miLista;
+                miLista = miLista@i;
+                miLista = miLista@i++i;
+                miLista = miLista--i;
+                miLista = miLista%i;
+                miLista = miLista**miLista;
+                miLista = miLista+i;
+                miLista = i+miLista;
+                miLista = miLista-i;
+                miLista = miLista*i;
+                miLista = i*miLista;
+                miLista = miLista/i;
+            ;
+
+        ;
+    }
+    fin;
+
+    a = 5;
+    b = 10;
+    c = a + b;
+
+    d = 3.14;
+    e = d / 2.0;
+
+    f = 'Y';
+    g = (a == b) && (d < e);
+
+    h = "Hola mundo";
+
+    listaEnteros = [1, 2, 3, 4];
+    listaReales = [3.14, 2.71, 1.41, 0.0];
+    listaCaracteres = ['a', 'b', 'c', 'd'];
+    listaLogicos = [verdadero, falso, verdadero, falso];
+    listaCadenas = ["uno", "dos", "tres", "cuatro"];
+
+    A(a, d);
+    D(h);
+    E(listaEnteros);
+}
+
