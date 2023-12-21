@@ -1,0 +1,35 @@
+programa{
+    var
+        lista entero a, b;
+        entero c, d;
+    ;
+
+    c = 0;
+    d = 0;
+
+    mientras (c != 10)
+        {
+            a = a@c++c;
+            b = b@c++(c*2);
+            c = c+1;
+        }
+    ;
+    a= a@3++100;
+
+    mientras (d != 10)
+        {
+            salida a@d, "\n";
+            d = d+1;
+        }
+    ;
+    salida "\n";
+    d = 0;
+    mientras (d != 10)
+        {
+            salida b@d, "\n";
+            d = d+1;
+        }
+    ;
+    salida #a;
+
+}

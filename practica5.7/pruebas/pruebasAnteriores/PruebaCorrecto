@@ -1,0 +1,25 @@
+
+programa 
+{
+    var 
+    entero a b, c
+    lista lista entero entero d e
+    ;
+
+
+    procedimiento SubProg (caracter x, logico y);
+    inicio
+        si a > b entonces
+            a = a + 1;
+        sino
+            b = b + 1;
+        ;
+    fin;
+
+    a = 5;
+    b = 10;
+    c = a + b;
+
+    SubProg('X', verdadero);
+}
+

@@ -1,0 +1,29 @@
+programa{
+    var
+        entero n, curr;
+    ;
+    salida "Introduce un numero: ";
+    entrada n;
+    salida "n == ", n, "\n";
+    curr = 2;
+    salida 1;
+
+    mientras (curr <= n)
+        {
+        var
+            entero d;
+        ;
+        d = n / curr;
+            
+        si ((d * curr) == n) entonces
+            {
+            salida "* ", curr;
+            n = n / curr;
+            }
+        sino
+            curr = curr + 1;
+        ;
+        }
+    ;
+    salida "\n";
+}
