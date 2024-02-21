@@ -13,7 +13,7 @@ public class TacticsMove : MonoBehaviour
     Tile currentTile;
 
     public bool moving = false;
-    public int move = 3;
+    public int move = 4;
     public float jumpHeight = 2;
     public float moveSpeed = 2;
     public float jumpVelocity = 4.5f;
@@ -36,17 +36,60 @@ public class TacticsMove : MonoBehaviour
     public void encontrarCasillasSeleccionables()
     {
         GetCurrentTile();
-        
+
+        List<Tile> seleccionablesAbiertos = new List<Tile>();
+        List<Tile> seleccionablesCerrados = new List<Tile>();
+        seleccionablesCerrados.Add(currentTile);
+
+        currentTile.FindNeighbors(0, currentTile);
+        foreach(Tile t in currentTile.vecinos)
+        {
+            if (t.walkable)
+            {
+                seleccionablesAbiertos.Add(t);
+            }
+        }
+
+        for(int i = 1; i < move; i++)
+        {
+            List<Tile> aux = new List<Tile>();
+            foreach(Tile abierta in seleccionablesAbiertos)
+            {
+                abierta.FindNeighbors(0, abierta);
+
+                if (abierta != currentTile)
+                {
+                    seleccionablesCerrados.Add(abierta);
+                }
+
+                foreach(Tile vecino in abierta.vecinos)
+                {
+                    if (!aux.Contains(vecino) && vecino.walkable)
+                    {
+                        aux.Add(vecino);
+                    }
+                }
+            }
+
+            seleccionablesAbiertos = aux;
+        }
+
+
         casillas = GameObject.FindGameObjectsWithTag("Tile"); ;
         foreach (GameObject tile in casillas)
         {
             Tile t = tile.GetComponent<Tile>();
-            int desplazamiento = Mathf.Abs(t.fila - currentTile.fila) + Mathf.Abs(t.columna - currentTile.columna);
-            if(desplazamiento <= move)
+            /*int desplazamiento = Mathf.Abs(t.fila - currentTile.fila) + Mathf.Abs(t.columna - currentTile.columna);
+            if(desplazamiento <= move && t.walkable)
+            {
+                t.selectable = true;
+            }*/
+            if (seleccionablesCerrados.Contains(t))
             {
                 t.selectable = true;
             }
         }
+
     }
 
     public void encontrarCamino(Tile target)
@@ -54,6 +97,7 @@ public class TacticsMove : MonoBehaviour
         GameObject[] generateGrid = GameObject.FindGameObjectsWithTag("GenerateGrid");
         List<Tile> abiertos = new List<Tile>();
         GetCurrentTile();
+
         currentTile.parent = null;
         currentTile.padres = new Stack<Tile>();
         currentTile.h = Mathf.Abs(target.fila - currentTile.fila) + Mathf.Abs(target.columna - currentTile.columna);
@@ -77,8 +121,9 @@ public class TacticsMove : MonoBehaviour
                 if(tile == target)
                 {
                     //actualTargetTile = FindEndTile(tile);
-                    actualTargetTile = encontrarCasillaFinal(tile);
-                    moverHaciaCasilla(actualTargetTile);
+                    //actualTargetTile = encontrarCasillaFinal(tile);
+                    //moverHaciaCasilla(actualTargetTile);
+                    moverHaciaCasilla(target);
                     return;
                 }
 
@@ -91,9 +136,9 @@ public class TacticsMove : MonoBehaviour
                         tile.parent = q;
                         //tile.padres.Clear();
                         tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
-                        Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                        //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
                         tile.padres.Push(q);
-                        Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                        //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
 
                         tile.g = tempG;
                         tile.f = tile.g + tile.h;
@@ -108,9 +153,9 @@ public class TacticsMove : MonoBehaviour
                     tile.parent = q;
                     //tile.padres.Clear();
                     tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
-                    Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                    //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
                     tile.padres.Push(q);
-                    Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                    //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
 
                     tile.g = q.g + 1;
                     tile.h = Mathf.Abs(target.fila - tile.fila) + Mathf.Abs(target.columna - tile.columna);
@@ -121,8 +166,89 @@ public class TacticsMove : MonoBehaviour
 
         }
 
-        actualTargetTile = currentTile;
-        moverHaciaCasilla(actualTargetTile);
+        //actualTargetTile = currentTile;
+        //moverHaciaCasilla(actualTargetTile);
+        return;
+    }
+
+    public void encontrarCaminoSeleccionado(Tile target)
+    {
+        GameObject[] generateGrid = GameObject.FindGameObjectsWithTag("GenerateGrid");
+        List<Tile> abiertos = new List<Tile>();
+        GetCurrentTile();
+
+        currentTile.parent = null;
+        currentTile.padres = new Stack<Tile>();
+        currentTile.h = Mathf.Abs(target.fila - currentTile.fila) + Mathf.Abs(target.columna - currentTile.columna);
+        currentTile.f = currentTile.h;
+        abiertos.Add(currentTile);
+
+        List<Tile> cerrados = new List<Tile>();
+
+        while (abiertos.Count > 0)
+        {
+
+            Tile q = FindLowestF(abiertos);
+
+            q.FindNeighbors(0, q);
+
+            cerrados.Add(q);
+
+            foreach (Tile tile in q.vecinos)
+            {
+
+                if (tile == target)
+                {
+                    //actualTargetTile = FindEndTile(tile);
+                    //actualTargetTile = encontrarCasillaFinal(tile);
+                    moverHaciaCasillaAlt(target);
+                    return;
+                }
+
+                if (tile.walkable)
+                {
+                    if (abiertos.Contains(tile))
+                    {
+                        float tempG = q.g + 1;
+
+                        if (tempG < tile.g)
+                        {
+                            tile.parent = q;
+                            //tile.padres.Clear();
+                            tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
+                            //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                            tile.padres.Push(q);
+                            //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+
+                            tile.g = tempG;
+                            tile.f = tile.g + tile.h;
+                        }
+                    }
+                    else if (cerrados.Contains(tile))
+                    {
+                        // NADA
+                    }
+                    else
+                    {
+                        tile.parent = q;
+                        //tile.padres.Clear();
+                        tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
+                        //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                        tile.padres.Push(q);
+                        //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+
+                        tile.g = q.g + 1;
+                        tile.h = Mathf.Abs(target.fila - tile.fila) + Mathf.Abs(target.columna - tile.columna);
+                        tile.f = tile.g + tile.h;
+                        abiertos.Add(tile);
+                    }
+                }
+            }
+
+        }
+
+        //actualTargetTile = currentTile;
+        //moverHaciaCasillaAlt(actualTargetTile);
         return;
     }
 
@@ -221,12 +347,43 @@ public class TacticsMove : MonoBehaviour
     public void moverHaciaCasilla(Tile tile)
     {
         path.Clear();
-        tile.parent.target = true;
+        //tile.parent.target = true;
+        //tile.target = true;
+        //tile.walkable = false;
+        tile.padres.Peek().target = true;
+        tile.padres.Peek().walkable = false;
         moving = true;
 
         while (tile.padres.Count > 0)
         {
-            Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
+            if(tile.padres.Count == 1 && path.Count > 0)
+            {
+                tile.padres.Peek().walkable = true;
+            }
+            //Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
+            path.Push(tile.padres.Peek());
+            tile.padres.Pop();
+        }
+
+        Debug.Log("PATH: " + path.Count);
+        
+    }
+
+    public void moverHaciaCasillaAlt(Tile tile)
+    {
+        path.Clear();
+        tile.target = true;
+        tile.walkable = false;
+        moving = true;
+        tile.padres.Push(tile);
+
+        while (tile.padres.Count > 0)
+        {
+            if (tile.padres.Count == 1 && path.Count > 0)
+            {
+                tile.padres.Peek().walkable = true;
+            }
+            //Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
             path.Push(tile.padres.Peek());
             tile.padres.Pop();
         }
@@ -271,7 +428,6 @@ public class TacticsMove : MonoBehaviour
         {
             RemoveSelectableTiles();
             moving = false;
-
             TurnManager.EndTurn();
         }
     }
@@ -447,16 +603,16 @@ public class TacticsMove : MonoBehaviour
         return endTile;
     }
 
-    protected Tile encontrarCasillaFinal(Tile t)
+    public Tile encontrarCasillaFinal(Tile t)
     {
         Stack<Tile> tempPath = new Stack<Tile>(new Stack<Tile>(t.padres));
         tempPath.Push(t);
-        Debug.Log("(" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
+        //Debug.Log("(" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
 
         while (tempPath.Count > move)
         {
             tempPath.Pop();
-            Debug.Log("(" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
+            //Debug.Log("(" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
         }
 
         Debug.Log("CASILLA FINAL = (" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);

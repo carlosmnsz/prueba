@@ -81,27 +81,27 @@ public class Tile : MonoBehaviour
         CheckTile(-Vector3.right, jumpHeight, target);
         */
 
-        if((fila - 1) >= 0)
+        if ((fila - 1) >= 0)
         {
             GameObject[] generateGrid = GameObject.FindGameObjectsWithTag("GenerateGrid");
             Tile tile = generateGrid[0].GetComponent<GenerateGrid>().grid[fila - 1, columna].GetComponent<Tile>();
             tile.parent = this;
             tile.padres = new Stack<Tile>(new Stack<Tile>(this.padres));
             tile.padres.Push(this);
-            //Debug.Log("TILE (" + tile.fila + ", " + tile.columna + ") " + showStack(tile.padres) + "|| COUNT: " + tile.padres.Count);
+            //Debug.Log("TILE (" + tile.fila + ", " + tile.columna + ") " + showStack(tile.padres) + "|| COUNT: "+ tile.padres.Count);
             //tile.f = this.f + 1;
             //Debug.Log("Choosen Tile " + tile.fila + ", "+ tile.columna);
             vecinos.Add(tile);
         }
         //Debug.Log("Below Tile " + vecinos[0].fila + ", " + vecinos[0].columna);
-        if ((fila + 1) <= 9)
+        if ((fila + 1) <= 8)
         {
             GameObject[] generateGrid = GameObject.FindGameObjectsWithTag("GenerateGrid");
             Tile tile = generateGrid[0].GetComponent<GenerateGrid>().grid[fila + 1, columna].GetComponent<Tile>();
             tile.parent = this;
             tile.padres = new Stack<Tile>(new Stack<Tile>(this.padres));
             tile.padres.Push(this);
-            //Debug.Log("TILE (" + tile.fila + ", " + tile.columna + ") " + showStack(tile.padres) + "|| COUNT: " + tile.padres.Count);
+            //Debug.Log("TILE (" + tile.fila + ", " + tile.columna + ") " + showStack(tile.padres) + "|| COUNT: "+ tile.padres.Count);
             //tile.f = this.f + 1;
             //Debug.Log("Choosen Tile " + tile.fila + ", "+ tile.columna);
             vecinos.Add(tile);
@@ -114,13 +114,13 @@ public class Tile : MonoBehaviour
             tile.parent = this;
             tile.padres = new Stack<Tile>(new Stack<Tile>(this.padres));
             tile.padres.Push(this);
-            //Debug.Log("TILE (" + tile.fila + ", " + tile.columna + ") " + showStack(tile.padres) + "|| COUNT: " + tile.padres.Count);
+            //Debug.Log("TILE (" + tile.fila + ", " + tile.columna + ") " + showStack(tile.padres) + "|| COUNT: "+ tile.padres.Count);
             //tile.f = this.f + 1;
             //Debug.Log("Choosen Tile " + tile.fila + ", "+ tile.columna);
             vecinos.Add(tile);
         }
         //Debug.Log("Right Tile " + vecinos[2].fila + ", " + vecinos[2].columna);
-        if ((columna + 1) <= 9)
+        if ((columna + 1) <= 8)
         {
             GameObject[] generateGrid = GameObject.FindGameObjectsWithTag("GenerateGrid");
             Tile tile = generateGrid[0].GetComponent<GenerateGrid>().grid[fila, columna + 1].GetComponent<Tile>();

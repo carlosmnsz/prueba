@@ -26,6 +26,7 @@ public class PlayerMove : TacticsMove
             //FindSelectableTiles();
             encontrarCasillasSeleccionables();
             CheckMouse();
+            encontrarCasillasSeleccionables();
         }
         else
         {
@@ -48,7 +49,8 @@ public class PlayerMove : TacticsMove
 
                     if (t.selectable)
                     {
-                        MoveToTile(t);
+                        //MoveToTile(t);
+                        encontrarCaminoSeleccionado(t);
                     }
                 }
             }
