@@ -30,6 +30,8 @@ public class TacticsMove : MonoBehaviour
 
     public Tile actualTargetTile;
 
+    public int identificador = -1;
+
     //**********************
     GameObject[] casillas;
 
@@ -79,11 +81,6 @@ public class TacticsMove : MonoBehaviour
         foreach (GameObject tile in casillas)
         {
             Tile t = tile.GetComponent<Tile>();
-            /*int desplazamiento = Mathf.Abs(t.fila - currentTile.fila) + Mathf.Abs(t.columna - currentTile.columna);
-            if(desplazamiento <= move && t.walkable)
-            {
-                t.selectable = true;
-            }*/
             if (seleccionablesCerrados.Contains(t))
             {
                 t.selectable = true;
@@ -120,54 +117,50 @@ public class TacticsMove : MonoBehaviour
                 
                 if(tile == target)
                 {
-                    //actualTargetTile = FindEndTile(tile);
-                    //actualTargetTile = encontrarCasillaFinal(tile);
-                    //moverHaciaCasilla(actualTargetTile);
                     moverHaciaCasilla(target);
                     return;
                 }
 
-                if (abiertos.Contains(tile))
+                if (tile.walkable)
                 {
-                    float tempG = q.g + 1;
+                    if (abiertos.Contains(tile))
+                    {
+                        float tempG = q.g + 1;
 
-                    if (tempG < tile.g)
+                        if (tempG < tile.g)
+                        {
+                            tile.parent = q;
+                            tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
+                            //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+                            tile.padres.Push(q);
+                            //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
+
+                            tile.g = tempG;
+                            tile.f = tile.g + tile.h;
+                        }
+                    }
+                    else if (cerrados.Contains(tile))
+                    {
+                        // NADA
+                    }
+                    else
                     {
                         tile.parent = q;
-                        //tile.padres.Clear();
                         tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
                         //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
                         tile.padres.Push(q);
                         //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
 
-                        tile.g = tempG;
+                        tile.g = q.g + 1;
+                        tile.h = Mathf.Abs(target.fila - tile.fila) + Mathf.Abs(target.columna - tile.columna);
                         tile.f = tile.g + tile.h;
+                        abiertos.Add(tile);
                     }
-                }
-                else if (cerrados.Contains(tile))
-                {
-                    // NADA
-                }
-                else
-                {
-                    tile.parent = q;
-                    //tile.padres.Clear();
-                    tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
-                    //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
-                    tile.padres.Push(q);
-                    //Debug.Log("DESPS: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
-
-                    tile.g = q.g + 1;
-                    tile.h = Mathf.Abs(target.fila - tile.fila) + Mathf.Abs(target.columna - tile.columna);
-                    tile.f = tile.g + tile.h;
-                    abiertos.Add(tile);
                 }
             }
 
         }
 
-        //actualTargetTile = currentTile;
-        //moverHaciaCasilla(actualTargetTile);
         return;
     }
 
@@ -199,8 +192,6 @@ public class TacticsMove : MonoBehaviour
 
                 if (tile == target)
                 {
-                    //actualTargetTile = FindEndTile(tile);
-                    //actualTargetTile = encontrarCasillaFinal(tile);
                     moverHaciaCasillaAlt(target);
                     return;
                 }
@@ -214,7 +205,6 @@ public class TacticsMove : MonoBehaviour
                         if (tempG < tile.g)
                         {
                             tile.parent = q;
-                            //tile.padres.Clear();
                             tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
                             //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
                             tile.padres.Push(q);
@@ -231,7 +221,6 @@ public class TacticsMove : MonoBehaviour
                     else
                     {
                         tile.parent = q;
-                        //tile.padres.Clear();
                         tile.padres = new Stack<Tile>(new Stack<Tile>(q.padres));
                         //Debug.Log("ANTES: " + tile.showStack(tile.padres) + " (" + tile.fila + ", " + tile.columna + ")" + "|| COUNT: " + tile.padres.Count);
                         tile.padres.Push(q);
@@ -247,8 +236,6 @@ public class TacticsMove : MonoBehaviour
 
         }
 
-        //actualTargetTile = currentTile;
-        //moverHaciaCasillaAlt(actualTargetTile);
         return;
     }
 
@@ -283,75 +270,9 @@ public class TacticsMove : MonoBehaviour
         return tile;
     }
 
-    public void ComputeAdjacencyLists(float jumpHeight, Tile target)
-    {
-        //tiles = GameObject.FindGameObjectsWithTag("Tile");
-
-        foreach (GameObject tile in tiles)
-        {
-            Tile t = tile.GetComponent<Tile>();
-            t.FindNeighbors(jumpHeight, target);
-        }
-
-    }
-
-    public void FindSelectableTiles()
-    {
-        ComputeAdjacencyLists(jumpHeight, null);
-        GetCurrentTile();
-
-        Queue<Tile> process = new Queue<Tile>();
-
-        process.Enqueue(currentTile);
-        currentTile.visited = true;
-        //currentTile.parent = ??  leave as null 
-
-        while (process.Count > 0)
-        {
-            Tile t = process.Dequeue();
-
-            selectableTiles.Add(t);
-            t.selectable = true;
-
-            if (t.distance < move)
-            {
-                foreach (Tile tile in t.adjacencyList)
-                {
-                    if (!tile.visited)
-                    {
-                        tile.parent = t;
-                        tile.visited = true;
-                        tile.distance = 1 + t.distance;
-                        process.Enqueue(tile);
-                    }
-                }
-            }
-        }
-    }
-
-    public void MoveToTile(Tile tile)
-    {
-        path.Clear();
-        tile.target = true;
-        moving = true;
-
-        Tile next = tile;
-        while (next != null)
-        {
-            Debug.Log("TILE (" + next.fila + ", " + next.columna + ")");
-            path.Push(next);
-            next = next.parent;
-        }
-    }
-
     public void moverHaciaCasilla(Tile tile)
     {
         path.Clear();
-        //tile.parent.target = true;
-        //tile.target = true;
-        //tile.walkable = false;
-        tile.padres.Peek().target = true;
-        tile.padres.Peek().walkable = false;
         moving = true;
 
         while (tile.padres.Count > 0)
@@ -360,11 +281,20 @@ public class TacticsMove : MonoBehaviour
             {
                 tile.padres.Peek().walkable = true;
             }
-            //Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
+            Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
             path.Push(tile.padres.Peek());
             tile.padres.Pop();
+            if(path.Count > move)
+            {
+                Stack<Tile> temp = new Stack<Tile>(path);
+                temp.Pop();
+                path = new Stack<Tile>(temp);
+            }
         }
 
+        Stack<Tile> aux = new Stack<Tile>(path);
+        aux.Peek().target = true;
+        aux.Peek().walkable = false;
         Debug.Log("PATH: " + path.Count);
         
     }
@@ -428,7 +358,7 @@ public class TacticsMove : MonoBehaviour
         {
             RemoveSelectableTiles();
             moving = false;
-            TurnManager.EndTurn();
+            TurnManager.EndTurn(this);
         }
     }
 
@@ -575,123 +505,6 @@ public class TacticsMove : MonoBehaviour
 
         return lowest;
     }
-
-    protected Tile FindEndTile(Tile t)
-    {
-        Stack<Tile> tempPath = new Stack<Tile>();
-
-        Tile next = t.parent;
-        while (next != null)
-        {
-            Debug.Log("PUSH " + next.fila + ", " + next.columna + ": " + next.f);
-            tempPath.Push(next);
-            next = next.parent;
-        }
-
-        Debug.Log("COSTE: " + tempPath.Count + " || MOV: " + move);
-        if (tempPath.Count <= move)
-        {
-            return t.parent;
-        }
-
-        Tile endTile = null;
-        for (int i = 0; i <= move; i++)
-        {
-            endTile = tempPath.Pop();
-        }
-
-        return endTile;
-    }
-
-    public Tile encontrarCasillaFinal(Tile t)
-    {
-        Stack<Tile> tempPath = new Stack<Tile>(new Stack<Tile>(t.padres));
-        tempPath.Push(t);
-        //Debug.Log("(" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
-
-        while (tempPath.Count > move)
-        {
-            tempPath.Pop();
-            //Debug.Log("(" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
-        }
-
-        Debug.Log("CASILLA FINAL = (" + tempPath.Peek().fila + ", " + tempPath.Peek().columna + ") || COSTE: " + tempPath.Count + " || MOV: " + move);
-        return tempPath.Peek();
-    }
-
-    /*protected void FindPath(Tile target)
-    {
-        //ComputeAdjacencyLists(jumpHeight, target);
-        GetCurrentTile();
-
-        List<Tile> openList = new List<Tile>();
-        List<Tile> closedList = new List<Tile>();
-
-        openList.Add(currentTile);
-        currentTile.parent = null;
-        currentTile.h = Vector3.Distance(currentTile.transform.position, target.transform.position);
-        currentTile.f = currentTile.h;
-
-        Debug.Log("Current Tile " + currentTile.fila + ", " + currentTile.columna);
-        while (openList.Count > 0)
-        {
-            Tile q = FindLowestF(openList);
-            Debug.Log("Tile with lowest F " + q.fila + ", " + q.columna);
-            if(q.vecinos.Count <= 0)
-            {
-                Debug.Log("La lista de adyacencia está vacía");
-            }
-
-            closedList.Add(q);
-            if (closedList.Count <= 0)
-            {
-                Debug.Log("La lista de cerrados está vacía");
-            }
-
-            if (q == target)
-            {
-                //actualTargetTile = FindEndTile(q);
-                actualTargetTile = encontrarCasillaFinal(q);
-                Debug.Log("Actual Target Tile " + actualTargetTile.fila + ", " + actualTargetTile.columna);
-                MoveToTile(actualTargetTile);
-                return;
-            }
-
-            foreach (Tile tile in q.vecinos)  
-            {
-                if (closedList.Contains(tile))
-                {
-                    //Do nothing, already processed
-                }
-                else if (openList.Contains(tile))
-                {
-                    float tempG = q.g + Vector3.Distance(tile.transform.position, q.transform.position);
-
-                    if (tempG < tile.g)
-                    {
-                        tile.parent = q;
-
-                        tile.g = tempG;
-                        tile.f = tile.g + tile.h;
-                    }
-                }
-                else
-                {
-                    tile.parent = q;
-
-                    tile.g = q.g + Vector3.Distance(tile.transform.position, q.transform.position);
-                    tile.h = Vector3.Distance(tile.transform.position, target.transform.position);
-                    tile.f = tile.g + tile.h;
-
-                    openList.Add(tile);
-                }
-            }
-        }
-
-        //todo - what do you do if there is no path to the target tile?
-        return;
-        
-    }*/
 
     public void BeginTurn()
     {

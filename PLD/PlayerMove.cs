@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMove : TacticsMove 
 {
 
-	// Use this for initialization
-	void Start () 
+    // Use this for initialization
+    void Start () 
 	{
         Init();
 	}
@@ -18,6 +18,25 @@ public class PlayerMove : TacticsMove
 
         if (!turn)
         {
+            
+            if(TurnManager.turnoJugador && Input.GetMouseButtonUp(0))
+            {
+                //Debug.Log("¿CONTAINS?: " + TurnManager.currentGroup.Contains(this));
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.tag == "Player")
+                    {
+                        PlayerMove p = hit.collider.GetComponent<PlayerMove>();
+                        if (TurnManager.currentGroup.Contains(p))
+                        {
+                            p.BeginTurn();
+                        }
+                    }
+                }
+            }
             return;
         }
 
@@ -27,6 +46,12 @@ public class PlayerMove : TacticsMove
             encontrarCasillasSeleccionables();
             CheckMouse();
             encontrarCasillasSeleccionables();
+            if (Input.GetMouseButtonUp(1))
+            {
+                Debug.Log("ATRÁS");
+                RemoveSelectableTiles();
+                turn = false;
+            }
         }
         else
         {
