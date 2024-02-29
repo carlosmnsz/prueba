@@ -11,6 +11,7 @@ public class TacticsMove : MonoBehaviour
 
     Stack<Tile> path = new Stack<Tile>();
     Tile currentTile;
+    Vector3 previousPosition;
 
     public bool moving = false;
     public int move = 4;
@@ -169,6 +170,8 @@ public class TacticsMove : MonoBehaviour
         GameObject[] generateGrid = GameObject.FindGameObjectsWithTag("GenerateGrid");
         List<Tile> abiertos = new List<Tile>();
         GetCurrentTile();
+        previousPosition = currentTile.transform.position;
+        previousPosition.y = 1.5f; // ¡¡¡¡NÚMERO MÁGICO!!!!
 
         currentTile.parent = null;
         currentTile.padres = new Stack<Tile>();
@@ -380,18 +383,12 @@ public class TacticsMove : MonoBehaviour
             currentTile = null;
         }
 
-        foreach (Tile tile in selectableTiles)
-        {
-            tile.Reset();
-        }
-
         foreach (GameObject tile in casillas)
         {
             Tile t = tile.GetComponent<Tile>();
             t.Reset();
         }
 
-        selectableTiles.Clear();
     }
 
     void CalculateHeading(Vector3 target)
@@ -528,4 +525,14 @@ public class TacticsMove : MonoBehaviour
         TurnManager.SetOccupied(false);
     }
 
+    public void BackToPreviousTile()
+    {
+        GetCurrentTile();
+        currentTile.walkable = true;
+        //Debug.Log("PREVIOUS POSITION: " + previousPosition.x + ", " + previousPosition.y + ", " + previousPosition.z);
+        transform.position = previousPosition;
+        //GetCurrentTile();
+        //Debug.Log("CURRENT POSITION: " + currentTile.transform.position.x + ", " + currentTile.transform.position.y + ", " + currentTile.transform.position.z);
+        //Debug.Log("PREVIOUS POSITION: " + previousPosition.x + ", " + previousPosition.y + ", " + previousPosition.z);
+    }
 }

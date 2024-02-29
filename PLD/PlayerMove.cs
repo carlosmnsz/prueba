@@ -60,6 +60,12 @@ public class PlayerMove : TacticsMove
             }
             else
             {
+                if (Input.GetMouseButtonUp(1))
+                {
+                    this.BackToPreviousTile();
+                    action = false;
+                }
+
                 if (ActionManager.EndOfAction())
                 {
                     GetComponent<Renderer>().material.color = Color.grey;
