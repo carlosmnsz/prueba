@@ -281,7 +281,7 @@ public class TacticsMove : MonoBehaviour
             {
                 tile.padres.Peek().walkable = true;
             }
-            Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
+            //Debug.Log("TILE (" + tile.padres.Peek().fila + ", " + tile.padres.Peek().columna + ")");
             path.Push(tile.padres.Peek());
             tile.padres.Pop();
             if(path.Count > move)
@@ -295,7 +295,7 @@ public class TacticsMove : MonoBehaviour
         Stack<Tile> aux = new Stack<Tile>(path);
         aux.Peek().target = true;
         aux.Peek().walkable = false;
-        Debug.Log("PATH: " + path.Count);
+        //Debug.Log("PATH: " + path.Count);
         
     }
 
@@ -356,9 +356,19 @@ public class TacticsMove : MonoBehaviour
         }
         else
         {
+            
             RemoveSelectableTiles();
             moving = false;
-            TurnManager.EndTurn(this);
+            if (this.tag == "Player")
+            {
+                ActionManager.SetActual(this);
+            }
+            else
+            {
+                GetComponent<Renderer>().material.color = Color.grey;
+                TurnManager.EndTurn(this);
+            }
+            
         }
     }
 
@@ -509,11 +519,13 @@ public class TacticsMove : MonoBehaviour
     public void BeginTurn()
     {
         turn = true;
+        TurnManager.SetOccupied(true);
     }
 
     public void EndTurn()
     {
         turn = false;
+        TurnManager.SetOccupied(false);
     }
 
 }

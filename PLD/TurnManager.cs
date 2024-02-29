@@ -15,6 +15,7 @@ public class TurnManager : MonoBehaviour
     static public List<TacticsMove> currentGroup = new List<TacticsMove>();
     static public bool turnoJugador = false;
     static bool pass = true;
+    static bool occupied = false;
 
     // Use this for initialization
     void Start () 
@@ -138,6 +139,11 @@ public class TurnManager : MonoBehaviour
             {
                 StartTurn();
             }
+            else
+            {
+                //Debug.Log("FIN TURNO NPC");
+                PassTurn();
+            }
         }
     }
 
@@ -156,8 +162,32 @@ public class TurnManager : MonoBehaviour
 
     public static void PassTurn()
     {
+        if (turnoJugador)
+        {
+            foreach (TacticsMove t in jugadores)
+            {
+                t.GetComponent<Renderer>().material.color = Color.blue;
+            }
+        }
+        else
+        {
+            foreach (TacticsMove t in enemigos)
+            {
+                t.GetComponent<Renderer>().material.color = Color.green;
+            }
+        }
         turnoJugador = !turnoJugador;
         pass = true;
         //Debug.Log("SE PASA EL TURNO");
+    }
+
+    public static void SetOccupied(bool newOccupied)
+    {
+        occupied = newOccupied;
+    }
+
+    public static bool GetOccupied()
+    {
+        return occupied;
     }
 }

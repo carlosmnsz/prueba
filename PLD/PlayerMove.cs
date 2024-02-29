@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerMove : TacticsMove 
 {
 
+    bool action = false;
+
     // Use this for initialization
     void Start () 
 	{
@@ -30,7 +32,7 @@ public class PlayerMove : TacticsMove
                     if (hit.collider.tag == "Player")
                     {
                         PlayerMove p = hit.collider.GetComponent<PlayerMove>();
-                        if (TurnManager.currentGroup.Contains(p))
+                        if (TurnManager.currentGroup.Contains(p) && !TurnManager.GetOccupied())
                         {
                             p.BeginTurn();
                         }
@@ -42,20 +44,33 @@ public class PlayerMove : TacticsMove
 
         if (!moving)
         {
-            //FindSelectableTiles();
-            encontrarCasillasSeleccionables();
-            CheckMouse();
-            encontrarCasillasSeleccionables();
-            if (Input.GetMouseButtonUp(1))
+            if (!action)
             {
-                Debug.Log("ATRÁS");
-                RemoveSelectableTiles();
-                turn = false;
+                //FindSelectableTiles();
+                encontrarCasillasSeleccionables();
+                CheckMouse();
+                encontrarCasillasSeleccionables();
+                if (Input.GetMouseButtonUp(1))
+                {
+                    //Debug.Log("ATRÁS");
+                    RemoveSelectableTiles();
+                    turn = false;
+                    TurnManager.SetOccupied(false);
+                }
+            }
+            else
+            {
+                if (ActionManager.EndOfAction())
+                {
+                    GetComponent<Renderer>().material.color = Color.grey;
+                    action = false;
+                }
             }
         }
         else
         {
             Move();
+            action = true;
         }
 	}
 
