@@ -13,7 +13,7 @@ public class NPCMove : TacticsMove
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	protected virtual void Update () 
 	{
         Debug.DrawRay(transform.position, transform.forward);
 

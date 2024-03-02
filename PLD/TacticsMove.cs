@@ -10,7 +10,7 @@ public class TacticsMove : MonoBehaviour
     GameObject[] tiles;
 
     Stack<Tile> path = new Stack<Tile>();
-    Tile currentTile;
+    public Tile currentTile;
     Vector3 previousPosition;
 
     public bool moving = false;
@@ -181,6 +181,12 @@ public class TacticsMove : MonoBehaviour
 
         List<Tile> cerrados = new List<Tile>();
 
+        if(currentTile == target)
+        {
+            moverHaciaCasillaAlt(target);
+            return;
+        }
+
         while (abiertos.Count > 0)
         {
 
@@ -260,7 +266,7 @@ public class TacticsMove : MonoBehaviour
         currentTile.current = true;
     }
 
-    public Tile GetTargetTile(GameObject target)
+    public static Tile GetTargetTile(GameObject target)
     {
         RaycastHit hit;
         Tile tile = null;

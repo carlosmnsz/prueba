@@ -11,6 +11,7 @@ public class Tile : MonoBehaviour
     public bool current = false;
     public bool target = false;
     public bool selectable = false;
+    public bool objective = false;
 
     public List<Tile> adjacencyList = new List<Tile>();
     public List<Tile> vecinos = new List<Tile>();
@@ -47,6 +48,10 @@ public class Tile : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = Color.red;
         }
+        else if (objective)
+        {
+            GetComponent<Renderer>().material.color = Color.blue;
+        }
         else
         {
             GetComponent<Renderer>().material.color = Color.white;
@@ -61,6 +66,7 @@ public class Tile : MonoBehaviour
         current = false;
         target = false;
         selectable = false;
+        objective = false;
 
         visited = false;
         parent = null;

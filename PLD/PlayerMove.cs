@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerMove : TacticsMove 
 {
-
     bool action = false;
 
     // Use this for initialization
@@ -70,6 +69,28 @@ public class PlayerMove : TacticsMove
                 {
                     GetComponent<Renderer>().material.color = Color.grey;
                     action = false;
+                }
+                else
+                {
+                    if (ActionManager.GetAttack())
+                    {
+                        if (TurnManager.turnoJugador && Input.GetMouseButtonUp(0))
+                        {
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                            RaycastHit hit;
+                            if (Physics.Raycast(ray, out hit))
+                            {
+                                if (hit.collider.tag == "NPC")
+                                {
+                                    if (gameObject != null && hit.collider.gameObject != null)
+                                    {
+                                        ActionManager.InflictDamage(gameObject, hit.collider.gameObject);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

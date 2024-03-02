@@ -10,8 +10,8 @@ public class TurnManager : MonoBehaviour
     static Dictionary<string, List<TacticsMove>> units = new Dictionary<string, List<TacticsMove>>();
     //static Queue<string> turnKey = new Queue<string>();
     //static Queue<TacticsMove> turnTeam = new Queue<TacticsMove>();
-    static List<TacticsMove> jugadores = new List<TacticsMove>();
-    static List<TacticsMove> enemigos = new List<TacticsMove>();
+    public static List<TacticsMove> jugadores = new List<TacticsMove>();
+    public static List<TacticsMove> enemigos = new List<TacticsMove>();
     static public List<TacticsMove> currentGroup = new List<TacticsMove>();
     static public bool turnoJugador = false;
     static bool pass = true;
@@ -162,23 +162,26 @@ public class TurnManager : MonoBehaviour
 
     public static void PassTurn()
     {
-        if (turnoJugador)
+        if (!occupied)
         {
-            foreach (TacticsMove t in jugadores)
+            if (turnoJugador)
             {
-                t.GetComponent<Renderer>().material.color = Color.blue;
+                foreach (TacticsMove t in jugadores)
+                {
+                    t.GetComponent<Renderer>().material.color = Color.blue;
+                }
             }
-        }
-        else
-        {
-            foreach (TacticsMove t in enemigos)
+            else
             {
-                t.GetComponent<Renderer>().material.color = Color.green;
+                foreach (TacticsMove t in enemigos)
+                {
+                    t.GetComponent<Renderer>().material.color = Color.green;
+                }
             }
+            turnoJugador = !turnoJugador;
+            pass = true;
+            //Debug.Log("SE PASA EL TURNO");
         }
-        turnoJugador = !turnoJugador;
-        pass = true;
-        //Debug.Log("SE PASA EL TURNO");
     }
 
     public static void SetOccupied(bool newOccupied)
